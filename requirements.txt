@@ -1,0 +1,4 @@
+streamlit
+sqlalchemy
+requests
+icalendar
