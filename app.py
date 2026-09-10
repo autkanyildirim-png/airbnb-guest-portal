@@ -226,7 +226,8 @@ if active_route == "chat":
     with SessionLocal() as db:
         res = db.query(Reservation).options(joinedload(Reservation.service)).filter(Reservation.access_token == token_chat).first()
         if not res:
-            st.error("❌ Geçersiz bağlantı.")
+            st.error("❌ Geçersiz veya süresi dolmuş rezervasyon bağlantısı.")
+            st.info("Lütfen işletme sahibinizden geçerli bir giriş linki talep ediniz.")
         else:
             srv = res.service
             is_phone_ready = bool(res.guest_phone and len(res.guest_phone.strip()) >= 10 and res.phone_verified == "Evet")
@@ -315,7 +316,6 @@ elif active_route == "review":
                 st.session_state.selected_star = res.rating or 5
             
             star_cols = st.columns(5)
-            star_labels = ["1 Yıldız", "2 Yıldız", "3 Yıldız", "4 Yıldız", "5 Yıldız"]
             for i in range(1, 6):
                 with star_cols[i - 1]:
                     btn_label = f"⭐ {i}" if i <= st.session_state.selected_star else f"☆ {i}"
@@ -340,7 +340,14 @@ else:
     
     with st.sidebar:
         st.markdown("### 🌐 Sistem Alan Adı / IP")
-        base_host = st.text_input("Portal Adresi:", value="https://misafir-portali.streamlit.app")
+        base_host = st.text_input("Portal Adresi:", placeholder="Otomatik algılanıyor...")
+        if not base_host:
+            # Otomatik URL algılama
+            try:
+                base_host = f"https://{st.context.headers.get('host', 'localhost:8501')}"
+            except Exception:
+                base_host = "http://localhost:8501"
+            st.caption(f"Aktif Link: `{base_host}`")
     
     tab0, tab1, tab2, tab3, tab4, tab5 = st.tabs([
         "📖 Başlangıç Rehberi",
