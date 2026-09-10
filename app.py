@@ -340,7 +340,7 @@ else:
     
     with st.sidebar:
         st.markdown("### 🌐 Sistem Alan Adı / IP")
-        base_host = st.text_input("Portal Adresi:", value=[https://misafir-portali.streamlit.app](https://misafir-portali.streamlit.app))
+        base_host = st.text_input("Portal Adresi:", value="http://localhost:8501")
     
     tab0, tab1, tab2, tab3, tab4, tab5 = st.tabs([
         "📖 Başlangıç Rehberi",
